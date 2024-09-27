@@ -2,40 +2,37 @@
 #include <stack>
 #include <queue>
 #include <vector>
-
 using namespace std;
 
-
-void checking(vector<int> v, int ai ) {
-    int min = INT_MAX;
-    for (int i = 0; i < v.size(); i++) {
-        if(v[i] < min ) {
-            min = v[i];
-        }
-    }
-    if ( min <= ai ) {
-        cout << min << " ";
-    } else {
-        cout << "-1" << " ";
-    }
-}
-
 int main() {
-    int N, min = 0;
-
-    cin >> N;
+    int n, ai;
+    cin >> n;
     queue<int> q;
-    vector<int> v;
-    for (int i = 0; i < N ; i ++) {
-        int ai;
+    stack<int> s;
+    vector<int> result(n, -1); // Вектор для хранения результатов
+
+    for (int i = 0; i < n; i++) {
         cin >> ai;
         q.push(ai);
     }
+
+    s.push(q.front());
+    q.pop();
     cout << "-1" << " ";
-    while (q.empty() == false) {
-        v.push_back(q.front());
+
+    while (!q.empty()) {
+        int num = q.front();
+        while (!s.empty() && s.top() > num) {
+            s.pop();
+        }
+        if (!s.empty()) {
+            cout << s.top() << " ";
+        } else {
+            cout << "-1" << " ";
+        }
+        s.push(num);
         q.pop();
-        checking(v,q.front());
     }
+
     return 0;
 }
