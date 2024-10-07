@@ -1,24 +1,56 @@
 #include <iostream>
-#include <vector>
-
 using namespace std;
 
-int main() {
-    int a;
-    cin >> a; 
-
-    vector<int> c(a);
-
-    for (int i = 0; i < a; i++) {
-        cin >> c[i];
+class Node
+{
+public:
+    int data;
+    Node *next;
+    Node(int data)
+    {
+        this->data = data;
+        next = nullptr;
     }
+};
 
-    for (int i = 0; i < a; i++) {
-      if(i % 2 == 0){
-        cout << c[i] << " ";
+void print(Node *&tail)
+{
+    int k = 1;
+    while (tail != nullptr)
+    {
+        if (k % 2 == 0)
+        {
+            cout << tail->data << " ";
+        }
+        tail = tail->next;
+        k++;
     }
-    }
-    cout << endl; 
+}
 
-    return 0;
+int main()
+{
+    int n;
+    cin >> n;
+    Node *head = nullptr;
+    Node* tail = nullptr;
+    for (int i = 0; i < n; i++)
+    {
+        int t;
+        cin >> t;
+        Node *current = new Node(t);
+
+        if (head == nullptr)
+        {
+            // First node case
+            head = current;
+            tail = head;
+        }
+        else
+        {
+            // Subsequent nodes
+            tail->next = current;
+            tail = tail->next;
+        }
+    }
+    print(head);
 }
