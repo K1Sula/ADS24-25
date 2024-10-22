@@ -1,0 +1,181 @@
+# Определение структуры очереди
+STRUCT Queue
+    ARRAY items
+    INTEGER front
+    INTEGER rear
+    INTEGER size
+
+# Инициализация очереди
+FUNCTION initializeQueue(size)
+    CREATE Queue
+    SET Queue.items = NEW ARRAY[size]
+    SET Queue.front = 0
+    SET Queue.rear = -1
+    SET Queue.size = 0
+    RETURN Queue
+
+# Проверка, пуста ли очередь
+FUNCTION isEmpty(queue)
+    RETURN queue.size == 0
+
+# Проверка, полна ли очередь
+FUNCTION isFull(queue)
+    RETURN queue.size == SIZE(queue.items)
+
+# Добавление элемента в очередь
+FUNCTION enqueue(queue, item)
+    IF isFull(queue) THEN
+        PRINT "Очередь переполнена"
+    ELSE
+        queue.rear = (queue.rear + 1) MOD SIZE(queue.items)
+        queue.items[queue.rear] = item
+        INCREMENT queue.size
+
+# Удаление элемента из очереди
+FUNCTION dequeue(queue)
+    IF isEmpty(queue) THEN
+        PRINT "Очередь пуста"
+        RETURN NULL
+    ELSE
+        SET item = queue.items[queue.front]
+        queue.front = (queue.front + 1) MOD SIZE(queue.items)
+        DECREMENT queue.size
+        RETURN item
+
+# Получение первого элемента очереди без удаления
+FUNCTION front(queue)
+    IF isEmpty(queue) THEN
+        PRINT "Очередь пуста"
+        RETURN NULL
+    ELSE
+        RETURN queue.items[queue.front]
+
+# Пример использования очереди
+BEGIN
+    SET myQueue = initializeQueue(5)
+
+    CALL enqueue(myQueue, 10)
+    CALL enqueue(myQueue, 20)
+    CALL enqueue(myQueue, 30)
+
+    PRINT "Первый элемент: " + CALL front(myQueue)
+
+    PRINT "Удаленный элемент: " + CALL dequeue(myQueue)
+    PRINT "Первый элемент после удаления: " + CALL front(myQueue)
+END
+
+
+
+
+
+# Определение структуры двусторонней очереди
+STRUCT Deque
+    ARRAY items
+    INTEGER front
+    INTEGER rear
+    INTEGER size
+
+# Инициализация двусторонней очереди
+FUNCTION initializeDeque(size)
+    CREATE Deque
+    SET Deque.items = NEW ARRAY[size]
+    SET Deque.front = -1
+    SET Deque.rear = 0
+    SET Deque.size = 0
+    RETURN Deque
+
+# Проверка, пуста ли двусторонняя очередь
+FUNCTION isEmpty(deque)
+    RETURN deque.size == 0
+
+# Проверка, полна ли двусторонняя очередь
+FUNCTION isFull(deque)
+    RETURN deque.size == SIZE(deque.items)
+
+# Добавление элемента в начало
+FUNCTION addFront(deque, item)
+    IF isFull(deque) THEN
+        PRINT "Двусторонняя очередь переполнена"
+    ELSE
+        IF deque.front == -1 THEN
+            deque.front = 0
+            deque.rear = 0
+        ELSE
+            deque.front = (deque.front - 1 + SIZE(deque.items)) MOD SIZE(deque.items)
+        ENDIF
+        deque.items[deque.front] = item
+        INCREMENT deque.size
+
+# Добавление элемента в конец
+FUNCTION addRear(deque, item)
+    IF isFull(deque) THEN
+        PRINT "Двусторонняя очередь переполнена"
+    ELSE
+        deque.rear = (deque.rear + 1) MOD SIZE(deque.items)
+        deque.items[deque.rear] = item
+        INCREMENT deque.size
+        IF deque.front == -1 THEN
+            deque.front = 0
+        ENDIF
+    ENDIF
+
+# Удаление элемента из начала
+FUNCTION removeFront(deque)
+    IF isEmpty(deque) THEN
+        PRINT "Двусторонняя очередь пуста"
+        RETURN NULL
+    ELSE
+        SET item = deque.items[deque.front]
+        deque.front = (deque.front + 1) MOD SIZE(deque.items)
+        DECREMENT deque.size
+        IF isEmpty(deque) THEN
+            deque.front = -1
+            deque.rear = 0
+        ENDIF
+        RETURN item
+
+# Удаление элемента из конца
+FUNCTION removeRear(deque)
+    IF isEmpty(deque) THEN
+        PRINT "Двусторонняя очередь пуста"
+        RETURN NULL
+    ELSE
+        SET item = deque.items[deque.rear]
+        deque.rear = (deque.rear - 1 + SIZE(deque.items)) MOD SIZE(deque.items)
+        DECREMENT deque.size
+        IF isEmpty(deque) THEN
+            deque.front = -1
+            deque.rear = 0
+        ENDIF
+        RETURN item
+
+# Получение первого элемента без удаления
+FUNCTION getFront(deque)
+    IF isEmpty(deque) THEN
+        PRINT "Двусторонняя очередь пуста"
+        RETURN NULL
+    ELSE
+        RETURN deque.items[deque.front]
+
+# Получение последнего элемента без удаления
+FUNCTION getRear(deque)
+    IF isEmpty(deque) THEN
+        PRINT "Двусторонняя очередь пуста"
+        RETURN NULL
+    ELSE
+        RETURN deque.items[deque.rear]
+        
+# Пример использования двусторонней очереди
+BEGIN
+    SET myDeque = initializeDeque(5)
+
+    CALL addRear(myDeque, 10)
+    CALL addRear(myDeque, 20)
+    CALL addFront(myDeque, 30)
+
+    PRINT "Первый элемент: " + CALL getFront(myDeque)
+    PRINT "Последний элемент: " + CALL getRear(myDeque)
+
+    PRINT "Удаленный элемент с начала: " + CALL removeFront(myDeque)
+    PRINT "Удаленный элемент с конца: " + CALL removeRear(myDeque)
+END

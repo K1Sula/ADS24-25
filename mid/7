@@ -1,0 +1,122 @@
+# Определение структуры узла
+STRUCT Node
+    INTEGER data
+    Node left
+    Node right
+
+# Определение структуры дерева
+STRUCT BinarySearchTree
+    Node root
+
+# Инициализация дерева
+FUNCTION initializeBST()
+    CREATE BinarySearchTree
+    SET BinarySearchTree.root = NULL
+    RETURN BinarySearchTree
+
+# Добавление элемента в дерево
+FUNCTION insert(tree, data)
+    CREATE Node newNode
+    SET newNode.data = data
+    SET newNode.left = NULL
+    SET newNode.right = NULL
+
+    IF tree.root == NULL THEN
+        SET tree.root = newNode
+    ELSE
+        CALL insertRec(tree.root, newNode)
+    ENDIF
+
+FUNCTION insertRec(current, newNode)
+    IF newNode.data < current.data THEN
+        IF current.left == NULL THEN
+            SET current.left = newNode
+        ELSE
+            CALL insertRec(current.left, newNode)
+        ENDIF
+    ELSE
+        IF current.right == NULL THEN
+            SET current.right = newNode
+        ELSE
+            CALL insertRec(current.right, newNode)
+        ENDIF
+    ENDIF
+
+# Поиск элемента в дереве
+FUNCTION search(tree, value)
+    RETURN CALL searchRec(tree.root, value)
+
+FUNCTION searchRec(current, value)
+    IF current == NULL THEN
+        RETURN FALSE
+
+    IF current.data == value THEN
+        RETURN TRUE
+    ELSE IF value < current.data THEN
+        RETURN CALL searchRec(current.left, value)
+    ELSE
+        RETURN CALL searchRec(current.right, value)
+    ENDIF
+
+# Удаление элемента из дерева
+FUNCTION deleteNode(tree, value)
+    SET tree.root = CALL deleteRec(tree.root, value)
+
+FUNCTION deleteRec(current, value)
+    IF current == NULL THEN
+        RETURN NULL
+
+    IF value < current.data THEN
+        SET current.left = CALL deleteRec(current.left, value)
+    ELSE IF value > current.data THEN
+        SET current.right = CALL deleteRec(current.right, value)
+    ELSE
+        # Узел с одним дочерним элементом или без
+        IF current.left == NULL THEN
+            RETURN current.right
+        ELSE IF current.right == NULL THEN
+            RETURN current.left
+
+        # Узел с двумя дочерними элементами: находим минимальный элемент в правом поддереве
+        SET minNode = CALL findMin(current.right)
+        SET current.data = minNode.data
+        SET current.right = CALL deleteRec(current.right, minNode.data)
+    ENDIF
+    RETURN current
+
+FUNCTION findMin(current)
+    WHILE current.left != NULL DO
+        SET current = current.left
+    ENDWHILE
+    RETURN current
+
+# Вывод элементов дерева (симметричный обход)
+FUNCTION inorderTraversal(node)
+    IF node != NULL THEN
+        CALL inorderTraversal(node.left)
+        PRINT node.data
+        CALL inorderTraversal(node.right)
+
+# Пример использования бинарного дерева поиска
+BEGIN
+    SET myBST = initializeBST()
+
+    CALL insert(myBST, 50)
+    CALL insert(myBST, 30)
+    CALL insert(myBST, 70)
+    CALL insert(myBST, 20)
+    CALL insert(myBST, 40)
+    CALL insert(myBST, 60)
+    CALL insert(myBST, 80)
+
+    PRINT "Элементы дерева в порядке возрастания:"
+    CALL inorderTraversal(myBST.root)
+
+    SET valueToSearch = 40
+    PRINT "Поиск " + valueToSearch + ": " + CALL search(myBST, valueToSearch)
+
+    SET valueToDelete = 70
+    CALL deleteNode(myBST, valueToDelete)
+    PRINT "Элементы дерева после удаления " + valueToDelete + ":"
+    CALL inorderTraversal(myBST.root)
+END

@@ -1,0 +1,96 @@
+# Определение структуры узла
+STRUCT Node
+    INTEGER data
+    Node next
+
+# Определение структуры списка
+STRUCT LinkedList
+    Node head
+
+# Инициализация списка
+FUNCTION initializeList()
+    CREATE LinkedList
+    SET LinkedList.head = NULL
+    RETURN LinkedList
+
+# Добавление элемента в конец списка
+FUNCTION append(list, data)
+    CREATE Node newNode
+    SET newNode.data = data
+    SET newNode.next = NULL
+
+    IF list.head == NULL THEN
+        SET list.head = newNode
+    ELSE
+        SET current = list.head
+        WHILE current.next != NULL DO
+            SET current = current.next
+        ENDWHILE
+        SET current.next = newNode
+    ENDIF
+
+# Добавление элемента в начало списка
+FUNCTION prepend(list, data)
+    CREATE Node newNode
+    SET newNode.data = data
+    SET newNode.next = list.head
+    SET list.head = newNode
+
+# Удаление элемента по значению
+FUNCTION deleteValue(list, value)
+    IF list.head == NULL THEN
+        PRINT "Список пуст"
+        RETURN
+
+    # Удаление головы списка
+    IF list.head.data == value THEN
+        SET list.head = list.head.next
+        RETURN
+    ENDIF
+
+    SET current = list.head
+    WHILE current.next != NULL AND current.next.data != value DO
+        SET current = current.next
+    ENDWHILE
+
+    IF current.next == NULL THEN
+        PRINT "Элемент не найден"
+    ELSE
+        SET current.next = current.next.next
+    ENDIF
+
+# Поиск элемента по значению
+FUNCTION search(list, value)
+    SET current = list.head
+    WHILE current != NULL DO
+        IF current.data == value THEN
+            RETURN TRUE
+        ENDIF
+        SET current = current.next
+    ENDWHILE
+    RETURN FALSE
+
+# Вывод элементов списка
+FUNCTION printList(list)
+    SET current = list.head
+    WHILE current != NULL DO
+        PRINT current.data
+        SET current = current.next
+    ENDWHILE
+
+# Пример использования односвязного списка
+BEGIN
+    SET myList = initializeList()
+
+    CALL append(myList, 10)
+    CALL append(myList, 20)
+    CALL prepend(myList, 5)
+
+    PRINT "Элементы списка:"
+    CALL printList(myList)
+
+    PRINT "Поиск 20: " + CALL search(myList, 20)
+    CALL deleteValue(myList, 10)
+    PRINT "Элементы списка после удаления 10:"
+    CALL printList(myList)
+END

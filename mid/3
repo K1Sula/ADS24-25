@@ -1,0 +1,59 @@
+# Определение структуры стека
+STRUCT Stack
+    ARRAY items
+    INTEGER top
+
+# Инициализация стека
+FUNCTION initializeStack(size)
+    CREATE Stack
+    SET Stack.items = NEW ARRAY[size]
+    SET Stack.top = -1
+    RETURN Stack
+
+# Проверка, пуст ли стек
+FUNCTION isEmpty(stack)
+    RETURN stack.top == -1
+
+# Проверка, полный ли стек
+FUNCTION isFull(stack)
+    RETURN stack.top == SIZE(stack.items) - 1
+
+# Добавление элемента в стек
+FUNCTION push(stack, item)
+    IF isFull(stack) THEN
+        PRINT "Стек переполнен"
+    ELSE
+        INCREMENT stack.top
+        stack.items[stack.top] = item
+
+# Удаление элемента из стека
+FUNCTION pop(stack)
+    IF isEmpty(stack) THEN
+        PRINT "Стек пуст"
+        RETURN NULL
+    ELSE
+        SET item = stack.items[stack.top]
+        DECREMENT stack.top
+        RETURN item
+
+# Получение верхнего элемента стека без удаления
+FUNCTION peek(stack)
+    IF isEmpty(stack) THEN
+        PRINT "Стек пуст"
+        RETURN NULL
+    ELSE
+        RETURN stack.items[stack.top]
+
+# Пример использования стека
+BEGIN
+    SET myStack = initializeStack(5)
+
+    CALL push(myStack, 10)
+    CALL push(myStack, 20)
+    CALL push(myStack, 30)
+
+    PRINT "Верхний элемент: " + CALL peek(myStack)
+
+    PRINT "Удаленный элемент: " + CALL pop(myStack)
+    PRINT "Верхний элемент после удаления: " + CALL peek(myStack)
+END
