@@ -25,7 +25,7 @@ int partition(int* arr, int beg, int end){
     return i+1;
 }
 
-// divide and conquer
+// divide and  
 void quickSort(int* arr, int beg, int end){
     if(beg<end){
         int p = partition(arr, beg, end);

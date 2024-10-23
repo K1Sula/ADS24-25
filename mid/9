@@ -1,0 +1,28 @@
+FUNCTION quickSort(array, low, high)
+    IF low < high THEN
+        # Выбор индекса опорного элемента и его корректное позиционирование
+        INTEGER pivotIndex = partition(array, low, high)
+
+        # Рекурсивная сортировка элементов слева от опорного элемента
+        CALL quickSort(array, low, pivotIndex - 1)
+
+        # Рекурсивная сортировка элементов справа от опорного элемента
+        CALL quickSort(array, pivotIndex + 1, high)
+    ENDIF
+
+FUNCTION partition(array, low, high)
+    # Выбираем последний элемент как опорный
+    INTEGER pivot = array[high]
+    INTEGER i = low - 1  # Индекс для меньших элементов
+
+    FOR j = low TO high - 1 DO
+        # Если текущий элемент меньше или равен опорному
+        IF array[j] <= pivot THEN
+            i = i + 1
+            SWAP array[i] WITH array[j]  # Меняем местами элементы
+        ENDIF
+    ENDFOR
+
+    # Перемещаем опорный элемент в правильную позицию
+    SWAP array[i + 1] WITH array[high]
+    RETURN i + 1  # Возвращаем индекс опорного элемента

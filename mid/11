@@ -1,0 +1,57 @@
+# Вставка элемента в очередь с приоритетом
+FUNCTION insert(queue, element)
+    ADD element TO queue
+    CALL heapifyUp(queue, size(queue) - 1)
+
+FUNCTION heapifyUp(queue, index)
+    WHILE index > 0 DO
+        SET parentIndex = (index - 1) // 2  # Родительский узел
+
+        IF queue[index] > queue[parentIndex] THEN
+            SWAP queue[index] WITH queue[parentIndex]
+            SET index = parentIndex
+        ELSE
+            BREAK
+        ENDIF
+    ENDWHILE
+
+# Извлечение элемента с максимальным приоритетом (максимум)
+FUNCTION extractMax(queue)
+    IF size(queue) == 0 THEN
+        RETURN NULL  # Очередь пуста
+
+    SET maxElement = queue[0]  # Наивысший приоритет всегда в корне
+    SWAP queue[0] WITH queue[size(queue) - 1]  # Заменяем корень последним элементом
+    REMOVE last element from queue
+    CALL heapifyDown(queue, 0)  # Восстанавливаем свойства кучи
+
+    RETURN maxElement
+
+FUNCTION heapifyDown(queue, index)
+    WHILE index < size(queue) DO
+        SET leftChild = 2 * index + 1
+        SET rightChild = 2 * index + 2
+        SET largest = index
+
+        IF leftChild < size(queue) AND queue[leftChild] > queue[largest] THEN
+            SET largest = leftChild
+        ENDIF
+
+        IF rightChild < size(queue) AND queue[rightChild] > queue[largest] THEN
+            SET largest = rightChild
+        ENDIF
+
+        IF largest != index THEN
+            SWAP queue[index] WITH queue[largest]
+            SET index = largest
+        ELSE
+            BREAK
+        ENDIF
+    ENDWHILE
+
+# Просмотр максимального элемента (без удаления)
+FUNCTION peek(queue)
+    IF size(queue) == 0 THEN
+        RETURN NULL  # Очередь пуста
+
+    RETURN queue[0]  # Корневой элемент — это элемент с максимальным приоритетом

@@ -1,77 +1,29 @@
-#include <iostream>
-#include <vector>
-#include <sstream>
+#include <stdio.h>
+#include <algorithm>
+void solve(int arr[], int id, int coef)
+{
+    if (id < 1)
+        return;
 
-using namespace std;
+    printf("%i ", arr[id]);
+    if (coef < 1)
+        return;
+    solve(arr, id - coef, coef / 2);
+    solve(arr, id + coef, coef / 2);
+}
 
-struct Node {
-    int data;
-    Node* left;
-    Node* right;
+int main(void)
+{
 
-    Node(int data) : data(data), left(nullptr), right(nullptr) {}
-};
+    int n;
+    scanf("%i", &n);
+    int size = (1 << n);
+    int arr[size];
+    arr[0] = 0;
+    for (int i = 1; i < size; i++)
+        scanf("%i", &arr[i]);
 
-class BinarySearchTree {
-public:
-    Node* root;
-    int sum;
+    std::sort(arr, arr + size);
 
-    BinarySearchTree() : root(nullptr), sum(0) {}
-
-    Node* add(int data) {
-        root = recursivelyInsert(data, root);
-        return root;
-    }
-
-    Node* recursivelyInsert(int data, Node* root) {
-        if (root == nullptr) {
-            return new Node(data);
-        }
-        if (root->data >= data) {
-            root->left = recursivelyInsert(data, root->left);
-        } else {
-            root->right = recursivelyInsert(data, root->right);
-        }
-        return root;
-    }
-
-    void newValuesForTree(Node* node) {
-        if (node == nullptr) {
-            return;
-        }
-        newValuesForTree(node->right);
-        sum += node->data;
-        node->data = sum;
-        newValuesForTree(node->left);
-    }
-
-    void printValues(Node* node) {
-        if (node == nullptr) {
-            return;
-        }
-        printValues(node->right);
-        cout << node->data << " ";
-        printValues(node->left);
-    }
-};
-
-int main() {
-    int size;
-    cin >> size;
-    vector<int> array(size);
-    
-    for (int i = 0; i < size; i++) {
-        cin >> array[i];
-    }
-
-    BinarySearchTree bst;
-    for (int i : array) {
-        bst.add(i);
-    }
-
-    bst.newValuesForTree(bst.root);
-    bst.printValues(bst.root);
-    
-    return 0;
+    solve(arr, (1 << (n - 1)), (n > 1 ? (1 << (n - 2)) : 0));
 }
