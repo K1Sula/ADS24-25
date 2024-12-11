@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
+// robin karp algotihm 
 using namespace std;
 
 //written by n-n06;

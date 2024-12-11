@@ -2,7 +2,7 @@
 #include <cmath>
 using namespace std;
 
-
+// kutta mortis pratt
 vector<int> prefix_func(string text, string pat){
     string s = pat + "#" + text;
     vector<int> pref(s.size()); 
