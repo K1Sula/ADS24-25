@@ -1,7 +1,9 @@
 #include <iostream>
 #include <string>
 #include <cmath>
+
 using namespace std;
+
 class Node
 {
 private:
@@ -18,13 +20,18 @@ public:
     Node* getNext(){
         return next;
     }
+
     void setData(string data){
         this->data = data;
     }
+
     void setNext(Node* next){
         this->next = next;
     }
 };
+
+
+
 class List
 {
 private:
@@ -76,6 +83,7 @@ public:
         return nullptr;
     }
 };
+
 class HashTable
 {
 private:
@@ -89,6 +97,7 @@ public:
     ~HashTable(){
         delete[] content;
     }
+
     int hash(string s){
         int sum = 0;
         for (int i = 0; i < s.length(); i++)
@@ -97,28 +106,41 @@ public:
         }
         return sum%m;
     }
+
     void insert(string s){
         content[hash(s)].insert(s);
     }
+
     void print(){
         for (int i = 0; i < m; i++)
         {
             content[i].print();
         }
     }
+
     Node* search(string s){
         int probe = hash(s);
         return content[probe].search(s);
     }
 };
+
+
+
+
+
+
 int main(){
    
     HashTable h(10);
+
     h.insert("ha");
     h.insert("he");
     h.insert("ho");
     h.insert("hu");
+
     h.print();
+
     cout<<h.search("he")->getData();
+
     return 0;
 }
